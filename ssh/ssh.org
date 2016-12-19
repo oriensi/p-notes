@@ -1,0 +1,47 @@
+#+TITLE: SSH
+#+STARTUP: indent
+
+* 生成密钥
+ssh-keygen -t rsa
+将公钥放到进程主机，之后无需再输入密码
+
+ssh USER@REMOTE_HOST "cat >> ~/.ssh/authorized_keys" < ~/.ssh/id_rsa.pub
+
+** 生成管理多个密钥
+#+BEGIN_SRC bash
+ssh-keygen -t rsa -f ~/.ssh/id_rsa.work -C "Key for Work stuff"
+ssh-keygen -t rsa -f ~/.ssh/id_rsa.github -C "Key for GitHub stuff"
+# 修改~/.ssh/config 文件
+Host *.workdomain.com
+    IdentityFile ~/.ssh/id_rsa.github
+    User git
+Host *.workdomain.com
+    IdentityFile ~/.ssh/id_rsa.work
+    User lee
+# git[user]@github.com[host]
+#+END_SRC
+
+* -p 指定端口号
+ssh user@localhost -p 422
+#+BEGIN_EXAMPLE
+注意：
+scp -P 9989 xxxx root@192.168.1.10:/root/
+    -P 紧跟在scp后 表示远程主机的端口
+#+END_EXAMPLE
+
+* -C 压缩功能
+ssh -C user@hostname COMMANDS
+
+* ssh 命令相关
++ 在远程主机中运行命令,多条命令以分号分隔
+
+  ssh user@host 'commands'
+
++ ssh user@remote_host 'cat >> list' < file
+
+  将本地的file 追加到远程的 list文件中
+
+* 挂载
+sshfs 将进程主机中的目录挂载到本地
+
+sshfs user@remotehost:/home/path /mnt/mountpoint

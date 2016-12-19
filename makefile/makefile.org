@@ -8,7 +8,6 @@
   + subst
 
     用法是$(subst FROM,TO,TEXT),即将TEXT中的东西从FROM变为TO
-    e.g.
     #+BEGIN_SRC make
     $(subst a,the,There is a big tree)，
     # 把"There is a big tree"中的"a"替换成"the"，
@@ -21,9 +20,9 @@
 
     在Makefile中，它被展开为 *已经存在的、使用空格分开的、匹配此模式的* 所有文件列表
     e.g.
-#+BEGIN_SRC make
+    #+BEGIN_SRC make
     $(wildcard *.c)  # 所有.c文件的列表
-#+END_SRC
+    #+END_SRC
 
   + filter
 
