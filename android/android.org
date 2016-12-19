@@ -1,0 +1,71 @@
+#+TITLE: ANDROID
+#+STARTUP: indent
+
+* phone
+** 信号
+dBm = -113+2*asu
+
+* adb 命令
++ 不灭屏
+  : adb shell dumpsys power > power_dump.log
+
++ selinux
+  #+BEGIN_SRC bash
+  adb shell "cat /proc/kmsg |grep avc" > avc_log.txt
+  #+END_SRC
+
+* cts
+** usb accessory
+与pid vid 有关，不要修改idVendor为18d1的内容
+#+BEGIN_EXAMPLE
+sudo touch /etc/udev.rules.d/51-android.rules
+sudo chmod a+rw /etc/udev/rules.d/51-android.rules
+# 将下面内容添加到 /etc/udev/rules.d/51-android.rules 中
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="2d01", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0bb4", ATTRS{idProduct}=="0c03", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0bb4", ATTRS{idProduct}=="0c02", MODE="0666"
+# 重启udev
+sudo restart udev
+#+END_EXAMPLE
+** 签名
+: android.security.cts.PackageSignatureTest--testPackageSignatures
+项目需要重新签名，不能使用google默认签名
+#+BEGIN_EXAMPLE
+$ development/tools/make_key releasekey '/C=CN/ST=BeiJing/L=Hai\
+Dian/O=MediaTek/OU=WCD/CN=demo/emailAddress=demo@mediatek.com'
+$ development/tools/make_key platform '...'
+$ development/tools/make_key media '...'
+$ development/tools/make_key shared '...'
+#+END_EXAMPLE
+
+#+CAPTION: make_key 参数
+|--------------+----------------------------------------------------|
+| argument     | meanings                                           |
+|--------------+----------------------------------------------------|
+| /            | <                                                  |
+|              | <50>                                               |
+| C            | Country Name(2 letter code)                        |
+| ST           | State or Province Name(full name)                  |
+| L            | Locality Name(eg, city)                            |
+| O            | Organization Name(eg, company)                     |
+| OU           | Organization Unit Name (eg, section)               |
+| CN           | Common Name (eg, your name or your server's hostname) |
+| emailAddress | Contact email address                              |
+|--------------+----------------------------------------------------|
+
+生成的文件在当前目录下:
+
+Move: testkey.pk8, testkey.x509.pem, releasekey.pk8, releasekey.x509.pem,
+media.pk8, media.x509.pem, platform.pk8, platform.x509.pem,
+shared.pk8 and shared.x509.pem (test key 在build/target/product/security/下)
+
+to:   device/mediatek/common/security/${Project}
+** data backup
+#+BEGIN_SRC bash
+adb shell bmgr enable true
+adb shell bmgr transport android/com.android.internal.backup.LocalTransport
+adb shell bmgr run
+adb uninstall com.android.cts.verifier
+adb install -r CtsVerifier.apk
+#+END_SRC
