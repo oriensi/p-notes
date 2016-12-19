@@ -6,21 +6,31 @@
 
 * fun
   + subst
+
     用法是$(subst FROM,TO,TEXT),即将TEXT中的东西从FROM变为TO
     e.g.
+    #+BEGIN_SRC make
     $(subst a,the,There is a big tree)，
-    把"There is a big tree"中的"a"替换成"the"，返回结果是"There is the big tree".
+    # 把"There is a big tree"中的"a"替换成"the"，
+    # 返回结果是"There is the big tree".
+    #+END_SRC
 
   + wildcard
+
     $(wildcard PATTERN...)
+
     在Makefile中，它被展开为 *已经存在的、使用空格分开的、匹配此模式的* 所有文件列表
     e.g.
-    $(wildcard *.c)  所有.c文件的列表
+#+BEGIN_SRC make
+    $(wildcard *.c)  # 所有.c文件的列表
+#+END_SRC
 
   + filter
+
     $(filter <pattern...>,<text>)
-    以<pattern>模式过滤<text>字符串中的单词，保留符合模式<pattern>的单词。可以有多个模式。
-    返回符合模式<pattern>的字串，可以返回多个。
+
+    以<pattern>模式过滤<text>字符串中的单词，保留符合模式<pattern>的单词。
+    可以有多个模式。返回符合模式<pattern>的字串，可以返回多个。
     #+BEGIN_SRC make
     TAR=$(filter ab, ab ab abc bcd efg)
     print :
@@ -29,22 +39,25 @@
     #+END_SRC
 
   + findstring
+
     $(findstring <find>,<in>)
+
     在字串<in>中查找<find>字串,findstring只能查找一个子串。
     #+BEGIN_SRC make
     $(findstring ab, a ab abc bcd)
     # 只返回一个 ab
     #+END_SRC
 
-
-
 * macro
   + LOCAL_CFLAGS
+    #+BEGIN_SRC make
     LOCAL_CFLAGS := -DUSE_JSC
     #相当于在所有源文件中增加 #define USE_JSC
     LOCAL_CFLAGS := -DUSE_COPY_BIT=1
     #相当于在所有源文件中增加 #define USE_COPY_BIT 1
+    #+END_SRC
 
 * 打印信息
   在makefile中打印输出信息的方法是：$(warning xxxxx)或者$(error xxxxx)
+
   输出变量方式为：$(warning  $(XXX))
