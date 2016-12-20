@@ -3,6 +3,7 @@
 #+OPTIONS: \n:t
 #+OPTIONS: num:nil
 #+OPTIONS: ^:nil
+#+FILETAGS: :makefile:
 
 * fun
   + subst

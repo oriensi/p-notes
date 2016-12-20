@@ -1,11 +1,12 @@
 #+TITLE: ANDROID
 #+STARTUP: indent
+#+FILETAGS: android
 
 * phone
 ** 信号
 dBm = -113+2*asu
 
-* adb 命令
+* adb log命令
 + 不灭屏
   : adb shell dumpsys power > power_dump.log
 
@@ -14,7 +15,7 @@ dBm = -113+2*asu
   adb shell "cat /proc/kmsg |grep avc" > avc_log.txt
   #+END_SRC
 
-* cts
+* cts                                                       :cts:
 ** usb accessory
 与pid vid 有关，不要修改idVendor为18d1的内容
 #+BEGIN_EXAMPLE

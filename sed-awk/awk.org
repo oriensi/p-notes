@@ -1,3 +1,10 @@
+#+TITLE: awk
+#+AUTHOR: fxdgrb@gmail.com
+#+STARTUP: indent
+#+OPTIONS: \n:t
+#+OPTIONS: ^:nil
+#+FILETAGS: :awk:
+
 * 变量
 + 字段
 

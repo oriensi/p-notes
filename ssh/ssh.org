@@ -1,5 +1,6 @@
 #+TITLE: SSH
 #+STARTUP: indent
+#+FILETAGS: :ssh:
 
 * 生成密钥
 ssh-keygen -t rsa
