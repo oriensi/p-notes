@@ -1,0 +1,31 @@
+#+TITLE: BASH
+#+AUTHOR: fxdgrb@gmail.com
+#+STARTUP: indent
+#+OPTIONS: ^:nil
+#+FILETAGS: :bash:
+
+* bash 赋值
+利用${}针对不同的变姜状态赋值(未设定、空值、非空值):
++ ${files-my.file.txt} ::
+  若$files 没有设定，则使用my.file.txt作为传回值(空值及非空值时不作处理)
+
++ ${files:-my.file.txt} ::
+  若$files 没有设定或为空值，则使用my.file.txt作为传回值(非空值时不作处理)
+
++ ${files+my.file.txt} ::
+  若$files 设为空值或非空值，均使用my.file.txt作为传回值(没设定时不作处理)
+
++ ${files:+my.file.txt} ::
+  若$files 为非空值，则使用my.file.txt作传回值(没设定及空值时不作处理)
+
++ ${files=my.file.txt} ::
+  若$files 没设定，则使用my.file.txt作为传回值，同时将$file 赋值为my.file.txt(空值及非空值时不作处理)
+
++ ${files:=my.file.txt} ::
+  若$files 没设定或为空值，则使用my.file.txt作传回值，同时将$file赋值为my.file.txt(非空值时不作处理)
+
++ ${files?my.file.txt} ::
+  若$files 没设定，则将my.file.txt输出至STDERR(空值及非空值时不作处理)
+
++ ${files:?my.file.txt} ::
+  若$files 没设定或为空值，则将my.file.txt输出至STDERR(非空值时不件处理)
