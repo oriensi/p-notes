@@ -1,19 +1,17 @@
-#+TITLE: ANDROID
+#+TITLE: Android
 #+STARTUP: indent
 #+FILETAGS: android
 
 * phone
 ** 信号
-dBm = -113+2*asu
+$dBm = -113+2*asu$
 
 * adb log命令
 + 不灭屏
   : adb shell dumpsys power > power_dump.log
 
 + selinux
-  #+BEGIN_SRC bash
-  adb shell "cat /proc/kmsg |grep avc" > avc_log.txt
-  #+END_SRC
+  : adb shell "cat /proc/kmsg |grep avc" > avc_log.txt
 
 * cts                                                       :cts:
 ** usb accessory
@@ -33,14 +31,14 @@ sudo restart udev
 : android.security.cts.PackageSignatureTest--testPackageSignatures
 项目需要重新签名，不能使用google默认签名
 #+BEGIN_EXAMPLE
-$ development/tools/make_key releasekey '/C=CN/ST=BeiJing/L=Hai\
-Dian/O=MediaTek/OU=WCD/CN=demo/emailAddress=demo@mediatek.com'
+$ development/tools/make_key releasekey '/C=xx/ST=xxx/L=xxxx\
+/O=xxxxx/OU=xxxx/CN=xxx/emailAddress=xxxx@xxx.xx'
 $ development/tools/make_key platform '...'
 $ development/tools/make_key media '...'
 $ development/tools/make_key shared '...'
 #+END_EXAMPLE
 
-#+CAPTION: make_key 参数
+#+CAPTION: make key 参数
 |--------------+----------------------------------------------------|
 | argument     | meanings                                           |
 |--------------+----------------------------------------------------|
@@ -55,13 +53,11 @@ $ development/tools/make_key shared '...'
 | emailAddress | Contact email address                              |
 |--------------+----------------------------------------------------|
 
-生成的文件在当前目录下:
-
-Move: testkey.pk8, testkey.x509.pem, releasekey.pk8, releasekey.x509.pem,
+生成的文件在当前目录下,
+将 testkey.pk8, testkey.x509.pem, releasekey.pk8, releasekey.x509.pem,
 media.pk8, media.x509.pem, platform.pk8, platform.x509.pem,
 shared.pk8 and shared.x509.pem (test key 在build/target/product/security/下)
-
-to:   device/mediatek/common/security/${Project}
+移动到相应位置
 ** data backup
 #+BEGIN_SRC bash
 adb shell bmgr enable true
@@ -70,3 +66,14 @@ adb shell bmgr run
 adb uninstall com.android.cts.verifier
 adb install -r CtsVerifier.apk
 #+END_SRC
+#+BEGIN_EXAMPLE
+frameworks/base/data/etc/platform.xml中是否有whitelist
+
+<!-- Whitelist of what components are permitted as backup data transports.  The
+     'service' attribute here is a flattened ComponentName string. -->
+<backup-transport-whitelisted-service
+    service="android/com.android.internal.backup.LocalTransportService" />
+<backup-transport-whitelisted-service
+    service="com.google.android.backup/.BackupTransportService" />
+#+END_EXAMPLE
+

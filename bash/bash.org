@@ -29,3 +29,119 @@
 
 + ${files:?my.file.txt} ::
   若$files 没设定或为空值，则将my.file.txt输出至STDERR(非空值时不件处理)
+
+* fun
+** read
+#+BEGIN_SRC bash
+read -n number_of_chars variable_name
+    # -n 从输入中谋取n个字符并存入variable_name
+read -s var
+    # -s 用不回显的方式读取密码
+read -p "Enter input:" var
+    # -p 显示提示信息
+read -t 2 var
+    # -t 在特定时限内读取输入（秒）
+read -d ":" var
+    # -d 用定界符结束输入行 (IFS)
+#+END_SRC
+
+** for
+$* 表示所有命令行参数
+
+不加引号时$* $@是相同的，但"$*"会被扩展成一个字符，而"$@"会被扩展成每一个参数
+#+BEGIN_SRC bash
+for x in $*; do # 当参数中包含空格时会失败，应当使用 "$@"
+echo "parameter: '$x'"
+done
+for i in `ls *.mp3`      # wrong 文件名有空格会出错
+for i in "`ls *.mp3`"    # wrong 会当成1个单词处理
+for i in *.mp3;do        # right
+cp $file $target         # wrong
+cp -- $file $target      #right
+#+END_SRC
+
+** getopt
+#+BEGIN_SRC bash
+ARGS=`getopt -o "a:p:" -l "author:,password:" -n "release.sh" -- "$@"`
+eval set -- "${ARGS}"
+echo "$@"
+while true; do
+    case "${1}" in
+        -a|--author)
+            shift;
+            if [[ -n "${1}" ]]; then
+                AUTHOR=${1}
+                shift;
+            fi
+            ;;
+        -p|--password)
+            shift;
+            if [[ -n "${1}" ]]; then
+                PASSWORD=${1}
+                shift;
+            fi
+            ;;
+        --)
+            shift;
+            break;
+            ;;
+    esac
+done
+echo "author: $AUTHOR"
+echo "password: $PASSWORD"
+echo "$@"
+#+END_SRC
+
+* if 判断 比较与测试
+#+BEGIN_SRC bash
+# if-else
+if condition; then
+    commands
+elif condition; then
+    commands
+else
+    commands
+fi
+#+END_SRC
+
+** []
+- [] 两个符号左右都要有空格分隔
+- 内部操作符与操作变量之间要有空格：如  [  “a”  =  “b”  ]
+- 字符串比较中，> < 需要写成\> \< 进行转义
+- [] 中字符串或者${}变量尽量使用""双引号扩住，避免值未定义引用而出错的好办法
+- [] 中可以使用 –a –o 进行逻辑运算
+- [] 是bash 内置命令：[ is a shell builtin
+
+** [[]]
+- [[]] 两个符号左右都要有空格分隔
+- 内部操作符与操作变量之间要有空格：如 ~[[  “a” =  “b”  ]]~
+- 字符串比较中，可以直接使用 > < 无需转义
+- [[]] 中字符串或者${}变量尽量使用“”如未使用""双引号扩住的话，会进行模式和元字符匹配
+- [[]] 内部可以使用 &&  || 进行逻辑运算
+- [[]] 是bash keyword：[[ is a shell keyword
+
+** 测试
+#+CAPTION: 文件测试
+| -f     | 普通文件   |
+| -x     | 可执行文件 |
+| -d     | 目录       |
+| -e     | 存在       |
+| -c     | 字符设备   |
+| -b     | 块设备     |
+| -w     | 可写       |
+| -r     | 可读       |
+| -L     | 符号链接   |
+
+#+CAPTION: 字符串测试
+| =  | 测试两个字符串是否相等   |
+| != | 测试两个字符串是否不相等 |
+| -z | 测试字符串是空字符串     |
+| -n | 测试字符串是非空字符串   |
+
+#+CAPTION: 数值比较
+| -eq | 等于     |
+| -gt | 大于     |
+| -lt | 小于     |
+| -ge | 大于等于 |
+| -le | 小于等于 |
+
