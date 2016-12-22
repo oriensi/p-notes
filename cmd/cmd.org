@@ -1,0 +1,54 @@
+#+STARTUP: indent
+#+OPTIONS: ^:nil
+
+* tar                                                       :tar:
+** 压缩解压程序
+bzip2 ----- .bz2
+gzip ------ .gz
+compress -- .Z
+xz -------- .xz
+
+** 命令
+bzip2 filename: 压缩删除原文件并生成 filename.bz2
+bunzip2 filename.bz2: 解压删除原文件并生成 filename
+gzip filenam: 压缩删除原文件并生成 filename.gz
+gunzip filename.gz: 解压删除原文件并生成 filename
+tar -cvf test.tar test/ : tar 打包
+xz -z test.tar.xz test.tar : xz 压缩
+xz -d test.tar.xz : xz 解压
+tar xvf test.tar : tar 解包
+
+- tar
+  -c (create) 创建
+  -v (verbose) 包含详细信息
+  -f 从一个文件进行读写
+  -t --list list the contents of an archive
+  -x 解包
+  -z 调用gunzip(创建归档文件时调用 gzip)
+  -j 调用 bunzip2 bzip2
+  -J 调用 xz
+  #+BEGIN_EXAMPLE
+  tar -zcvf tar # -cjvf 压缩
+  tar -zxvf tar # -xjvf 解压
+  #+END_EXAMPLE
+
+* tmux                                                     :tmux:
+** session
++ 创建新session
+  : tmux new -s <name-of-my-session>
+  tmux 内部
+  : C-b :new -s <name-of-my-session>
+
++ 切换session
+  : C-b s   #显示全部的会话  输入相应的id
+  连接session
+  : tmux attach-session -t session
+
++ session 重命名
+
+** copy paste
+C-b [        space    enter
+C-b ]  粘贴
+
+** window
+: C-b &      kill-window

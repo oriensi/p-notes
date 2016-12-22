@@ -67,7 +67,7 @@ adb uninstall com.android.cts.verifier
 adb install -r CtsVerifier.apk
 #+END_SRC
 #+BEGIN_EXAMPLE
-frameworks/base/data/etc/platform.xml中是否有whitelist
+# frameworks/base/data/etc/platform.xml中是否有whitelist
 
 <!-- Whitelist of what components are permitted as backup data transports.  The
      'service' attribute here is a flattened ComponentName string. -->
@@ -77,3 +77,10 @@ frameworks/base/data/etc/platform.xml中是否有whitelist
     service="com.google.android.backup/.BackupTransportService" />
 #+END_EXAMPLE
 
+
+* android studio
+使用AS 查看android源码：
+: mmm development/tools/idegen/
+编译生成idegen.jar
+: sh ./development/tools/idegen/idegen.sh
+生成android.iws, android.ipr, android.iml
