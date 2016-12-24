@@ -7,6 +7,9 @@
 $dBm = -113+2*asu$
 
 * adb log命令
++ 编译kernel
+  : make -j8 kernel bootimage
+
 + 不灭屏
   : adb shell dumpsys power > power_dump.log
 

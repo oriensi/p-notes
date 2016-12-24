@@ -37,17 +37,16 @@ tar xvf test.tar           # tar 解包
 
 * tmux                                                     :tmux:
 ** session
-+ 创建新session
-  : tmux new -s <name-of-my-session>
-  tmux 内部
-  : C-b :new -s <name-of-my-session>
++ 创建新session ::
+  外部 ~tmux new -s <name-of-my-session>~
+  tmux内部则 ~C-b :new -s <name-of-my-session>~
 
-+ 切换session
-  : C-b s   #显示全部的会话  输入相应的id
-  连接session
-  : tmux attach-session -t session
++ 切换session ::
+  tmux内 ~C-b s   #显示全部的会话  输入相应的id~
+  ~tmux attach-session -t session~
 
-+ session 重命名
++ session 重命名 ::
+  ~C-b $~
 
 ** copy paste
 C-b [  space  enter  选中
