@@ -1,0 +1,170 @@
+#+OPTIONS: \n:t
+#+OPTIONS: ^:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css" />
+* git config 配置文件
+** 配置文件位置
+   - /etc/gitconfig ::
+        git config --system
+   - ~/.gitconfig or ~/.config/git/config ::
+        git config --global
+   - .git/config ::
+        git config --local
+
+** 配置文件内容
+   #+BEGIN_SRC sh
+   git config http.proxy=127.0.0.1:8787 # lantern代理，现在收费了
+   #+END_SRC
+   #+BEGIN_EXAMPLE
+   [user]
+       name =
+       email =
+   [color]
+       ui = true
+   [core]
+       editor = vim
+   [alias]
+       co = checkout
+       br = branch
+       ba = branch -a
+       ci = commit
+       cim = commit --amend
+       sn = status -suno
+       st = status -s
+       pl = pull
+       ll = log --pretty=format:\"%h %s\" --graph
+       cp = cherry-pick
+       unstage = reset HEAD --
+   #+END_EXAMPLE
+
+* git command 命令
+** git checkout
+   git checkout origin/xxx -b xxx
+       切换捡出 远程分支
+   git checkout -b version2 v2.0.0
+** git clean
+   git clean -dxf
+       清除本地修改
+
+** git cherry-pick
+   git cherry-pick <commit-id>
+       将其他分支的节点提交到本分支
+
+** git commit
+   git commit --amend
+   修改最后一次commit 的注释 如果已经push了则无法修改
+
+   + 修改历史提交
+     #+BEGIN_EXAMPLE
+       git rebase -i HEAD~3  # 表示要修改当前版本的倒数第三次状态。
+       pick:*****
+       pick:*****
+       pick:*****
+       # 将需要修改的改为 edit, 然后保存退出
+       git commit --amend
+       git rebase --continue
+     #+END_EXAMPLE
+
+** git merge
+   git merge --no-ff develop
+       将develop 分支合并到当前分支
+       --no-ff 不使用(fast-farward merge)方式合并
+
+** git diff
+   git diff --<cached|staged> xxx
+   比较已暂存的文件和已提交
+
+** git log
+   OPTIONS
+   | Option          | Description                                                                 |
+   | -p              | Show the patch introduced with each commit.                                 |
+   | --stat          | Show statistics for files modified in each commit.                          |
+   | --shortstat     | Display only the changed/insertions/deletions line from the --stat command. |
+   | --name-only     | show the list of files modified after the commit information.               |
+   | --name-status   | show the list of files affected with a/m/d information as well.             |
+   | --abbrev-commit | Show only the first few characters of the SHA-1 checksum instead of all 40. |
+
+
+   + pretty
+     git log --pretty=format:"%h - %an, %ar : %s"
+     | Option | Description of Output                           |
+     | %H     | Commit hash                                     |
+     | %h     | Abbreviated commit hash                         |
+     | %T     | Tree hash                                       |
+     | %t     | Abbreviated tree hash                           |
+     | %P     | Parent hashes                                   |
+     | %p     | Abbreviated parent hashes                       |
+     | %an    | Author name                                     |
+     | %ae    | Author e-mail                                   |
+     | %ad    | Author date (format respects the --date=option) |
+     | %ar    | Author date, relative                           |
+     | %cn    | Committer name                                  |
+     | %ce    | Committer email                                 |
+     | %cd    | Committer date                                  |
+     | %cr    | Committer date, relative                        |
+     | %s     | Subject                                         |
+
+   + graph
+     this option adds a nice little ASCII graph
+     showing your branch and merge history
+   + options to limit the output
+     | Option            | Description                                                                 |
+     | -(n)              | show only the last n commits                                                |
+     | --since, --after  | limit the commits to those made after the specified date                    |
+     | --until, --before | limit the commits to those made before the specifed date                    |
+     | --author          | only show commits in which the author entry matches the specified string    |
+     | --committer       | only show commits in which the committer entry matches the specified string |
+     | --grep            | only show commits with a commit message containing the string               |
+     | -S                | only show commits adding or removing code matching the string               |
+
+** git tag
+   + git tag
+     list the tags in alphabetical order
+   + git tag -l 'v1.8.5*'
+   + git tag -a v1.4 -m 'my version 1.4'
+     添加标签
+     #+BEGIN_EXAMPLE
+     $ git show v1.4
+     tag v1.4
+     Tagger: name <name@example.com>
+     Date: date
+
+     my version 1.4
+
+     commit
+     123456789abcdef -- <hash>
+     Author: xxxxxxxxxx
+     Date: date
+
+     commit message
+     #+END_EXAMPLE
+
+** git stash
+   git stash      暂存
+   git stash pop  从暂存中取出
+
+** git patch 功能
+   git diff 生成标准patch
+   git apply 应用 patch
+   git apply --check 查看补丁是否能够顺利地应用到当前分支中
+
+   git format-patch 生成git 专用补丁
+* gitk
+  gitk --all
+* github
+** fork
+   + 远程代码合入
+     git remote add <upstream>(remote name) <url>
+     git fetch upstream
+     git merge upstream/master
+
+   + 分支
+     git checkout -b dev
+     创建分支  git branch dev; git checkout dev
+     git push origin dev
+     上传分支
+     git branch -d dev
+     删除分支
+     git push origin :dev
+     删除远程分支
+     git branch -m oldbranch newbranch
+     重命名分支名称
