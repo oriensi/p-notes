@@ -30,6 +30,27 @@
 + ${files:?my.file.txt} ::
   若$files 没设定或为空值，则将my.file.txt输出至STDERR(非空值时不件处理)
 
+* 字符串截取
++ ${varible#*string} ::
+  截取第1个string子串之后的字符串
++ ${varible##*string} ::
+  截取最后一个string子串之后的字符串
++ ${varible%string*} ::
+  截取最后一个string子串之前的字符串
++ ${varible%%string*} ::
+  截取第一个string子串之前的字符串
++ ${varible:start:len} ::
+  截取从start开始长度为len的子串，第1个字符位置为0
+#+BEGIN_SRC bash
+export TEST=123abc456abc789
+echo ${TEST#*abc}     # 456abc789
+echo ${TEST##*abc}    # 789
+echo ${TEST%abc*}     # 123abc456
+echo ${TEST%%abc*}    # 123
+echo ${TEST:0:3}      # 123
+echo ${TEST:3:3}      # abc
+#+END_SRC
+
 * fun
 ** read
 #+BEGIN_SRC bash
@@ -144,4 +165,3 @@ fi
 | -lt | 小于     |
 | -ge | 大于等于 |
 | -le | 小于等于 |
-
