@@ -30,4 +30,3 @@ adb pull /sdcard/%file% %n%.csv
 echo %n% > bat.txt
 
 #+END_SRC
-* setlocal enabledelayedexpansion
