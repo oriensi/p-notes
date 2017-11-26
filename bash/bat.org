@@ -1,0 +1,33 @@
+* 说明
+在产线需要在多台机器上进行pull 操作，需要一个简单批处理~
+
+#+BEGIN_SRC bat
+:: 没有此句自增的数字不会改变，需要在do () 结束后才会变更
+:: @ 不回显命令
+@setlocal enabledelayedexpansion
+:: 延时防止端口未识别
+@ping 127.1 /n 2 > nul
+adb devices
+@ping 127.1 /n 2 > nul
+adb root
+adb remount
+:: bat.txt 只存放一个数字
+@for /f %%c in (bat.txt) do (
+@set /a n=%%c
+@set /a n+=1
+adb pull /sdcard/Test_Data_OK.csv "!n!.csv"
+:: pull 成功的话给bat.txt 中的数字 +1
+@if %errorlevel% == 0 echo !n! > bat.txt
+)
+
+:: 不确定文件名时
+for /f %%a in ('adb shell ls /sdcard/ ^| findstr "Result.*csv"') do (
+:: 不设变量的话会多出一个换行...
+set file=%%a
+echo "%file%"
+adb pull /sdcard/%file% %n%.csv
+)
+echo %n% > bat.txt
+
+#+END_SRC
+* setlocal enabledelayedexpansion
