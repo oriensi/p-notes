@@ -35,6 +35,23 @@
        cp = cherry-pick
        unstage = reset HEAD --
    #+END_EXAMPLE
+* git 拉取与合入
+  + 远程代码合入
+    git remote add <upstream>(remote name) <url>
+    git fetch <upstream> [branch]
+    git merge upstream/master
+
+  + 分支
+     git checkout -b dev
+     创建分支，相当于 git branch dev; git checkout dev
+     git push origin dev
+     上传分支
+     git branch -d dev
+     删除分支
+     git push origin :dev
+     删除远程分支
+     git branch -m oldbranch newbranch
+     重命名分支名称
 
 * git command 命令
 ** git checkout
@@ -150,21 +167,3 @@
    git format-patch 生成git 专用补丁
 * gitk
   gitk --all
-* github
-** fork
-   + 远程代码合入
-     git remote add <upstream>(remote name) <url>
-     git fetch upstream
-     git merge upstream/master
-
-   + 分支
-     git checkout -b dev
-     创建分支  git branch dev; git checkout dev
-     git push origin dev
-     上传分支
-     git branch -d dev
-     删除分支
-     git push origin :dev
-     删除远程分支
-     git branch -m oldbranch newbranch
-     重命名分支名称
