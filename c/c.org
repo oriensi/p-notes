@@ -1,5 +1,52 @@
+#+TITLE: C/C++
+#+OPTIONS: \n:t
+#+FILETAGS: :c:c++:
+
 * 基础
-C语言 参数值传递
-* print相关
-** 对齐方式
-: %6.1f   右对齐(负数表示左对齐)，最少点6位，小数点后保留1位
+参数传递方式 ::
+值传递, 只传参数的拷贝
+
+宏 ::
+在预编译时展开，编译时为展开后的代码
+
+* IO
+** 标准输入与输出
++ 每次一个字符:
+  =getchar()= 等同于 =getc(stdin)= 可被实现为宏; 而 =fgetc(fp)= 为函数.
+
+  =putchar(c)= 等同于 =putc(c, stdout)= 可被实现为宏; =fputc(c, fp)= 为函数.
+
++ 每次一行:
+  : fgets(char*, int, FILE); gets(char*)
+  : fputs(char*, FILE);      puts(char*)
+  =fgets= 最多读取 ~n-1~ 个字符，缓冲区总以 ~null~ 结尾;
+
+  =gets= 会删除换行符，而 =fgets= 则保留换行符
+
+  =puts= 会将最后一位的 ~null~ 替换为换行输出， =fputs= 不会, 最好用 =fputs= 代替 =puts=
+
+** 格式化输出
+*** 对齐方式
+    : %6.1f   右对齐(负数表示左对齐)，最少点6位，小数点后保留1位
+* const
+顶层const(top-level const) 表示指针本身是个常量，
+而底层const(low-level const) 表示指针所指的对象是一个常量
+
+#+BEGIN_SRC C
+int main (int argc, char* argv[]) {
+    int i = 0;
+    int j = -1;
+    int *const p1 = &i;        // 不能改变 p1 的值， 这是一个顶层 const
+    const int ci = 42;         // 不能改变 ci 的值， 这是一个顶层 const
+    const int *p2 = &ci;        // 允许改变 p2 的值， 这是一个底层 const
+    const int *const p3 = p2;  // 靠右的 const 是顶层 const, 靠左的是底层 const
+    int *const &r = p1;        // 用于声明引用的 const 都是底层 const
+
+    // p1 = &j; // error: 顶层 const 不可以设置 p1 的值
+    *p1 = 2;    // ok:    顶层 const 可以设置 *p1 的值
+
+    p2 = &i;    // ok:    底层 const 可以设置 p2 的值
+    // *p2 = 4;  // error: 底层 const 不可以设置 *p2 的值
+    return 0;
+}
+#+END_SRC
