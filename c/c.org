@@ -3,22 +3,34 @@
 #+FILETAGS: :c:c++:
 
 * 基础
-参数传递方式 ::
-值传递, 只传参数的拷贝
-
-宏 ::
-在预编译时展开，编译时为展开后的代码
++ 参数传递方式 :: 值传递, 只传参数的拷贝
++ 宏 :: 在预编译时展开，编译时为展开后的代码
 
 * IO
 ** 标准输入与输出
-+ 每次一个字符:
+*** 每次一个字符
+  #+BEGIN_SRC c
+  int getchar(void);
+  int getc(FILE *stream);
+  int fgetc(FILE *stream);
+
+  int putchar(int c);
+  int putc(int c, FILE *stream);
+  int fputc(int c, FILE *stream);
+  #+END_SRC
   =getchar()= 等同于 =getc(stdin)= 可被实现为宏; 而 =fgetc(fp)= 为函数.
 
   =putchar(c)= 等同于 =putc(c, stdout)= 可被实现为宏; =fputc(c, fp)= 为函数.
 
-+ 每次一行:
-  : fgets(char*, int, FILE); gets(char*)
-  : fputs(char*, FILE);      puts(char*)
+*** 每次一行
+  #+BEGIN_SRC C
+  char *fgets(char* s, int size, FILE *stream);
+  char *gets(char*s);
+
+  int fputs(const char *s, FILE *stream);
+  int puts(const char *s);
+  #+END_SRC
+
   =fgets= 最多读取 ~n-1~ 个字符，缓冲区总以 ~null~ 结尾;
 
   =gets= 会删除换行符，而 =fgets= 则保留换行符
