@@ -6,6 +6,31 @@
 + 参数传递方式 :: 值传递, 只传参数的拷贝
 + 宏 :: 在预编译时展开，编译时为展开后的代码
 
+* macro
++ #include :: 包含头文件
++ #define :: 替换, 不会计算参数的值，只会直接替换
+  #+BEGIN_SRC c
+  #define max(A, B) ((A) > (B) ? (A) : (B))
+  max(i++, j++); // WRONG, 自增操作执行2遍
+  #define square(x) x * x // WRONG, 会有优先级问题
+  #+END_SRC
++ #undef :: 取消宏定义，通常用来保证使用的是函数而不是宏
+  #+BEGIN_SRC c
+  #undef getchar
+  int getchar(void) {...}
+  #+END_SRC
++ 参数替换 ::
+  ~#~ 需要将参数用引号包围时使用
+  #+BEGIN_SRC c
+  #define dprint(expr) printf(#expr " = %g\n", expr);
+  dprint(x/y);
+  printf("x/y" " = %g\n", x/y);
+  #+END_SRC
+  ~##~ 用于连接参数
+  #+BEGIN_SRC c
+  #define paste(front, back) front ## back
+  paste(name, 1) // 相当于 name1 ## 左右的空格不影响
+  #+END_SRC
 * IO
 ** 标准输入与输出
 *** 每次一个字符
