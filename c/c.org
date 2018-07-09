@@ -51,6 +51,7 @@
   #+BEGIN_SRC C
   char *fgets(char* s, int size, FILE *stream);
   char *gets(char*s);
+  ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
   int fputs(const char *s, FILE *stream);
   int puts(const char *s);
@@ -59,6 +60,11 @@
   =fgets= 最多读取 ~n-1~ 个字符，缓冲区总以 ~null~ 结尾;
 
   =gets= 会删除换行符，而 =fgets= 则保留换行符
+
+  =getline= 当 ~lineptr~ 是空，且 ~n~ 是 0 时，=getline= 会自动分配内存用于存储内容，
+  如果 ~lineptr~ 在之前已经分配了 ~n~ 大小的内存，当空间不足时，系统会自动调整大小重新分配空间。
+  ~lineptr~ ~n~ 的大小并不是读取内容的大小，而是系统自动分配的大小；
+  返回值为读取到的字符个数，不包括最后的'\0'
 
   =puts= 会将最后一位的 ~null~ 替换为换行输出， =fputs= 不会, 最好用 =fputs= 代替 =puts=
 
