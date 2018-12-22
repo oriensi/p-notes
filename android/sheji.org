@@ -1,0 +1,126 @@
+* 设计模式
+** Activity
+*** 周期
+  #+BEGIN_SRC dot :file ./lifecycle.png :cmdline -Kdot -Tpng
+  digraph lifecycle{
+    subgraph stream {
+      style = filled;
+      color = green;
+      label="stream";
+
+      a_s[label="Activity starts" shape=hexagon];
+      a_r[label="Activity is running" shape=hexagon];
+      a_f[label="Activity is shutdown" shape=hexagon];
+      a_s_bg[label="Another activity comes in front of the activity"];
+      a_s_ltnv[label="the activity is no longer visible"];
+      onCreate[shape="box"];
+      onStart[shape="box"];
+      onResume[shape="box"];
+      onPause[shape="box"];
+      onStop[shape="box"];
+      onDestroy[shape="box"];
+
+      a_s -> onCreate -> onStart -> onResume -> a_r -> a_s_bg -> onPause -> a_s_ltnv -> onStop -> onDestroy -> a_f;
+    }
+    subgraph state_k {
+      style = filled;
+      color = red;
+      p_k[label="Process is killed" shape=hexagon];
+      a_s_lm[label="Other applications need memory"];
+      a_s_nb[label="user navigates back to the activity"];
+      a_s_nb -> p_k[dir="back"];
+      p_k -> a_s_lm[dir="back"];
+      label="low memory";
+    }
+    subgraph state_r1 {
+      style = filled;
+      color = blue;
+      a_s_bf[label="the activity comes to the foreground"];
+      onRestart[shape="box"];
+      onRestart -> a_s_bf2[dir="back"];
+      label="activity restart";
+    }
+    subgraph state_r2 {
+      style = filled;
+      color = yellow;
+      a_s_bf2[label="the activity comes to the foreground"];
+      label="activity restart";
+    }
+   onStop -> a_s_lm;
+   onPause -> a_s_lm;
+   a_s_nb -> onCreate;
+   onPause -> a_s_bf;
+   a_s_bf -> onResume;
+   onStop -> a_s_bf2;
+   onRestart -> onStart;
+  }
+
+  #+END_SRC
+
+  #+RESULTS:
+  [[file:./lifecycle.png]]
+
++ onCreate
+  setContentView 此处调用 finish 将直接执行 onDestory
++ (onRestart)
++ onStart
+  after onCreate or onRestart, before onResume
++ (onRestoreInstanceState)
+  after onStart
++ onResume
+  after onPause
++ onPause
++ (onSaveInstanceState)
+  不确定何时调用
++ onStop
++ onDestory
+*** 模式
++ standard(标准模式)
+  每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否存在，并且它会进入启动者所在的栈中。
++ singleTop(栈顶复用模式)
+  如果新的Activity已经位于所在任务栈的顶部，则此Activity不会被重新创建 ，若已存在但不在栈顶，则仍然会重新创建；
++ singleTask(栈内复用模式)
+  只要Activity在一个栈已经存在，那么多次启动此Activity都不会重新创建实例。
++ singleInstance(单实例模式)
+  这是一种加强的singleTask模式，当该Activity启动后，系统会为该Acitivty创建一个新的栈，然后改Acitivty会独立地在这个栈内，但由于栈内复用特性，后续的请求均不会创建新的栈，除非这个独立的栈被系统销毁
+  独处一个返回栈，不同的程序调用后都使用同一个栈，解决共享活动实例的问题
+
++ persist
+  重启持久化
+** Observer 模式
++ ContentObservable
+  内部含有一个ContentObservable 的变量，存放observer 的 ArrayList 列表，
+  当内容发生变化时，通过 notifyChange 调用observer 的 onChange
+** Boradcast
+AMS 处理, pm 管理列表
++ 普通
++ 有序
+  被广播接收器接收后，可被终止，无法往下继续传达
+  在 onRecive 中使用 abortBroadcast 终止优先级低的reciver
++ sticky
+  一直存在于系统中直到被处理, 不建议使用
+*** 限制接收者
+1. 注册广播时将exported属性设置为false，使得非本App内部发出的此广播不被接收；
+2. 在广播发送和接收时，增设相应权限permission，用于权限验证；
+3. 发送广播时指定该广播接收器所在的包名，此广播将只会发送到此包中的App内与之相匹配的有效广播接收器中。
+   通过intent.setPackage(packageName)指定报名
+* framework
+** AMS
+** WMS
+WindowManagerGlobal  global
+createLocalWindowManager -> parent addView ...
+** View
+View的整个绘制流程可以分为以下三个阶段：
++ measure: 判断是否需要重新计算View的大小，需要的话则计算；
++ layout: 判断是否需要重新计算View的位置，需要的话则计算；
++ draw: 判断是否需要重新绘制View，需要的话则重绘制。
+** PMS
+abstract PackageManager.java 具体实现 ApplicationPackageManager
+
+packagemanager 由 ContextImpl 获得，ActivityThread.getPackageManager 得到 IpackageManager,
+再通过 ApplicationPackageManager 包装
+
+** Binder
+aidl 接口
+stub server 端实现, getService 取得 IService 接口对象
+** BT

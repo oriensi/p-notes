@@ -1,0 +1,66 @@
+* Process
+需要显示的进程间通信, 共享数据困难
+慢，进程控制和IPC开销很高
+
+* I/O 多路复用
+#+BEGIN_SRC c
+#include <unistd.h>
+#include <sys/types.h>
+
+// 返回已准备好的描述符的非零的个数，出错为-1
+int select(int maxfdp1, fd_set *restrict readfds, fd_set *restrict writefds,
+           fd_set *restrict exceptfds, struct timeval *restrict tvptr);
+FD_ZERO(fd_set *fdset);           /* clear all bitin fdset */
+FD_CLR(int fd, fd_set *fdset);    /* clear bit fdin fdset */
+FD_SET(int fd, fd_set *fdset);    /* turn on bit fd in fdset */
+FD_ISSET(int fd, fd_set *fdset);  /* Is bit fd in fdset on? */
+#+END_SRC
+
+编码繁琐, 不能充分利用多核处理器
+
+* Pthread
+线程上下文比进程上下文小的多，切换快
+线程是对等的，进程有父子关系
+
+** 共享数据
+线程上下文: 线程ID、栈、栈指针、程序计数器、条件码和通用目的寄存器值
+对等线程共享进程上下文的其它数据(全局、静态变量)
+
+** 可结合，可分离
+默认是可结合的，由对等线程调用 pthread_join 回收资源，
+可分离的：存储资源在终止时由系统自动释放
+
+#+BEGIN_SRC c
+#include <pthread.h>
+pthread_t pthread_self(void);      // 返回调用者的线程ID
+int pthread_detach(pthread_t tid); // 分离线程
+#+END_SRC
+
+** 信号量
+信号量可以被用于进程间通信，也可用于同一进程内的线程间通信
+进程间通信需使用命名信号量，线程间通信使用未命名信号量
+#+BEGIN_SRC c
+#include <semaphore.h>
+/* 命名信号量 创建或打开 */
+sem_t *sem_open(const char *name, int oflag, ... /* mode_t mode, unsigned int value */ );
+// 成功返回指针，失败返回 SEM_FAILED
+
+int sem_close(sem_t *sem); // 关闭信号量，信号量值不会改变
+// 成功返回 0，失败返回 -1
+int sem_unlink(const char *name); // 销毁命名信号量；成功 0，失败 -1
+
+int sem_trywait(sem_t *sem);
+int sem_wait(sem_t *sem);
+int sem_timedwait(sem_t *restrict sem, const struct timespec *restrict tsptr);
+
+imt sem_post(sem_t *sem);
+
+/* 未命名信号量 */
+int sem_init(sem_t *sem, int pshared, unsigned int value);
+// pshared 表明是否在多个进程间使用信号量，如果是，设为非0值
+int sem_destroy(sem_t *sem);
+#+END_SRC
+** 线程安全
+当且仅当被多个并发线程反复地调用时，它会一直产生正确的结果，称为线程安全函数。
+
+可重入性，被多线程调用时不会引用任何共享数据。

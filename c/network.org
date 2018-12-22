@@ -1,0 +1,38 @@
+* network
+** IP
+#+BEGIN_SRC c
+struct in_addr {
+  unsigned int s_addr;
+};   // 存放ip地址
+
+#include <arpa/inet.h>
+int inet_aton(const char *cp, struct in_addr *inp); // 返回: 若成功则为1，若出错则为0
+char *inet_ntoa(struct in_addr in);  // 返回: 指向点分十进制字符串的指针
+/* n: network,  a: application */
+#+END_SRC
+
+网络字节序（大端字节顺序）
+#+BEGIN_SRC c
+#include <netinet/in.h>
+// 按照网络字节顺序的值
+unsigned long int htonl(unsigned long int hostlong); // 32 位
+unsigned short int htons(unsigned short int hostshort); // 16 位
+// 返回主机字节顺序的值
+unsigned long int ntohl(unsigned long int netlong);
+unsigned short int ntohs(unsigned short int netshort);
+#+END_SRC
+
+*** port
+16 位整数
+客户端端口为内核自动分配的临时端口，服务器端口通常为知名端口
+
+** socket
+| client        | server        |
+| socket        | socket        |
+|               | bind          |
+|               | listen        |
+| connect       | accept        |
+| rio_writen    | rio_readlineb |
+| rio_readlineb | rio_writen    |
+| close         | rio_readlineb |
+|               | close         |
