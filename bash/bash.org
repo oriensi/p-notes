@@ -165,3 +165,20 @@ fi
 | -lt | 小于     |
 | -ge | 大于等于 |
 | -le | 小于等于 |
+
+* 计算时间差
+利用perl 的 Time::Piece 模块显示时间
+#+BEGIN_SRC shell
+  start_time=`date +%s`
+  sleep 5s
+  end_time=`date +%s`
+  echo $start_time
+  perl -MTime::Piece -se \
+                     '@times = map Time::Piece->strptime(/(.*)/, "%s"), $start, $end;
+                      $delta = $times[1] - $times[0];
+                      print "======= ".$delta->pretty." =========\n"' \
+       -- -start="$start_time" -end="$end_time"
+#+END_SRC
+
+#+RESULTS:
+|    ======= | 5 | seconds | ========= |

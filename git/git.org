@@ -31,7 +31,7 @@
        sn = status -suno
        st = status -s
        pl = pull
-       ll = log --pretty=format:\"%h %s\" --graph
+       ll = log --pretty=format:\"%h %C(yellow)%d%Creset %an %cd: %s\" --graph
        cp = cherry-pick
        unstage = reset HEAD --
    #+END_EXAMPLE
@@ -82,9 +82,12 @@
      #+END_EXAMPLE
 
 ** git merge
-   git merge --no-ff develop
+   + git merge --no-ff develop
        将develop 分支合并到当前分支
        --no-ff 不使用(fast-farward merge)方式合并
+   + git merge --squash <branch>
+       将修改内容合并过来，不包括提交信息. merge后需手动commit.
+       可以将多笔修改合并为一笔修改合并
 
 ** git diff
    git diff --<cached|staged> xxx
