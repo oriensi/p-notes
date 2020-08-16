@@ -1,0 +1,27 @@
+#+OPTIONS: ^:nil
+#+OPTIONS: \n:t
+
+[[./main.org][main.org]]
+* ssh
+[[./ssh/ssh.org][ssh/ssh.org]]
+* c
+[[./c/network.org][c/network.org]]
+[[./c/c.org][c/c.org]]
+[[./c/memory.org][c/memory.org]]
+[[./c/concurrent.org][c/concurrent.org]]
+[[./c/compile.org][c/compile.org]]
+* makefile
+[[./makefile/makefile.org][makefile/makefile.org]]
+* android
+[[./android/sheji.org][android/sheji.org]]
+[[./android/android.org][android/android.org]]
+* bash
+[[./bash/bat.org][bash/bat.org]]
+[[./bash/bash.org][bash/bash.org]]
+* sed-awk
+[[./sed-awk/sed.org][sed-awk/sed.org]]
+[[./sed-awk/awk.org][sed-awk/awk.org]]
+* cmd
+[[./cmd/cmd.org][cmd/cmd.org]]
+* git
+[[./git/git.org][git/git.org]]
