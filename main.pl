@@ -37,7 +37,7 @@ sub print_sub {
     $entry = $_;
     $entry =~ s#^./##;
     if (/\.org$/) {
-      say FILE "[[".$_."][".$entry."]]";
+      say FILE "[[".$_."][".$entry."]]\n";
       next;
     }
   }
